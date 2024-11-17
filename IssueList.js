@@ -69,6 +69,21 @@ class IssueFilter extends React.Component {
 //   row: { height: 100, backgroundColor: '#E7E6E1' }
 //   });
 const styles = StyleSheet.create({
+  navBar: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    padding: 10,
+    backgroundColor: '#f8f8f8',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  content: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 5,       
+    alignItems: 'center'
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -317,7 +332,7 @@ class BlackList extends React.Component {
 export default class IssueList extends React.Component {
     constructor() {
         super();
-        this.state = { issues: [], currentView: 'Q1', };
+        this.state = { issues: [], currentView : 'Q1', };
         this.createIssue = this.createIssue.bind(this);
         this.setView = this.setView.bind(this);
     }
@@ -354,76 +369,47 @@ export default class IssueList extends React.Component {
     }
     
     setView(view) {
-      this.setState({ currentView: view });
+      this.setState({ currentView : view });
     }
     
     render() {
     return (
-      // <div>
-      //   <nav style={{ marginBottom: 20, display: 'flex', gap: 10 }}>
-      //     <button style={{ padding: '10px 20px', cursor: 'pointer' }} onClick={() => this.setView('Q1')}>
-      //       Issue Filter
-      //     </button>
-      //     <button style={{ padding: '10px 20px', cursor: 'pointer' }} onClick={() => this.setView('Q2')}>
-      //       Issue Table
-      //     </button>
-      //     <button style={{ padding: '10px 20px', cursor: 'pointer' }} onClick={() => this.setView('Q3')}>
-      //       Issue Add
-      //     </button>
-      //     <button style={{ padding: '10px 20px', cursor: 'pointer' }} onClick={() => this.setView('Q4')}>
-      //       Blacklist
-      //     </button>
-      //   </nav>
+      <View style={styles.container}>
+        <View style={styles.navBar}>
+          <Button title="Issue Filter" onPress={() => this.setView('Q1')} />
+          <Button title="Issue Table" onPress={() => this.setView('Q2')} />
+          <Button title="Issue Add" onPress={() => this.setView('Q3')} />
+          <Button title="Blacklist" onPress={() => this.setView('Q4')} />
+        </View>
 
-      //   <>
-      //   {currentView === 'Q1' && (
-      //       {/****** Q1: Start Coding here. *******/}
-      //       <IssueFilter />
-      //       {/****** Q1: Code ends here *******/}
-      //   )}
-
-      //   {currentView === 'Q2' && (
-      //     <>
-      //       {/****** Q2: Start Coding here. *******/}
-      //       <IssueTable issues={issues} />
-      //       {/****** Q2: Code ends here *******/}
-      //     </>
-      //   )}
-
-      //   {currentView === 'Q3' && (
-      //       {/****** Q3: Start Coding here. *******/}
-      //       <IssueAdd createIssue={this.createIssue} />
-      //       {/****** Q3: Code Ends here. *******/}
-      //   )}
-
-      //   {currentView === 'Q4' && (
-      //       {/****** Q4: Start Coding here. *******/}
-      //       <BlackList />
-      //       {/****** Q4: Code Ends here *******/}
-      //   )}
-      //   </>
-      // </div>
+        <View style={styles.content}>
+          {this.state.currentView === 'Q1' && <IssueFilter />}
+          {this.state.currentView === 'Q2' && <IssueTable issues={this.state.issues} />}
+          {this.state.currentView === 'Q3' && <IssueAdd createIssue={this.createIssue} />}
+          {this.state.currentView === 'Q4' && <BlackList />}
+        </View>
+      </View>
 
     //后版本
-    <>
-    {/****** Q1: Start Coding here. ******/}
-    <IssueFilter />
-    {/****** Q1: Code ends here ******/}
+    // <>
+    // {/****** Q1: Start Coding here. ******/}
+    // <IssueFilter />
+    // {/****** Q1: Code ends here ******/}
 
 
-    {/****** Q2: Start Coding here. ******/}
-    <IssueTable issues={this.state.issues} />
-    {/****** Q2: Code ends here ******/}
+    // {/****** Q2: Start Coding here. ******/}
+    // <IssueTable issues={this.state.issues} />
+    // {/****** Q2: Code ends here ******/}
 
     
-    {/****** Q3: Start Coding here. ******/}
-    <IssueAdd createIssue={this.createIssue} />
-    {/****** Q3: Code Ends here. ******/}
+    // {/****** Q3: Start Coding here. ******/}
+    // <IssueAdd createIssue={this.createIssue} />
+    // {/****** Q3: Code Ends here. ******/}
 
-    {/****** Q4: Start Coding here. ******/}
-    <BlackList />
-    {/****** Q4: Code Ends here. ******/}
-    </>
+    // {/****** Q4: Start Coding here. ******/}
+    // <BlackList />
+    // {/****** Q4: Code Ends here. ******/}
+    // </>
       
     );
   }
