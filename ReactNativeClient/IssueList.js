@@ -23,7 +23,7 @@ import {
   async function graphQLFetch(query, variables = {}) {
     try {
         /****** Q4: Start Coding here. State the correct IP/port******/
-        const response = await fetch('http://192.168.10.122:3000/graphql', {
+        const response = await fetch('http://10.0.2.2:3000/graphql', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({ query, variables })
@@ -52,31 +52,98 @@ class IssueFilter extends React.Component {
       return (
         <>
         {/****** Q1: Start Coding here. ******/}
-
+        <View>
+          <Text>Issue Filter Component</Text>
+        </View>
         {/****** Q1: Code ends here ******/}
         </>
       );
     }
 }
 
+// const styles = StyleSheet.create({
+//     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+//   header: { height: 50, backgroundColor: '#537791' },
+//   text: { textAlign: 'center' },
+//   dataWrapper: { marginTop: -1 },
+//   row: { height: 100, backgroundColor: '#E7E6E1' }
+//   });
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-  header: { height: 50, backgroundColor: '#537791' },
-  text: { textAlign: 'center' },
-  dataWrapper: { marginTop: -1 },
-  row: { height: 40, backgroundColor: '#E7E6E1' }
-  });
+  navBar: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    padding: 10,
+    backgroundColor: '#f8f8f8',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  content: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 5,       
+    alignItems: 'center'
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: '#fff',
+  },
+  header: {
+    height: 60,
+    backgroundColor: '#537791',
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 14,
+    paddingHorizontal: 5,
+  },
+  leftAlignText: {
+    textAlign: 'left',
+    fontSize: 14,
+    paddingHorizontal: 5,
+  },
+  dataWrapper: {
+    marginTop: -1,
+  },
+  row: {
+    minHeight: 60,
+    backgroundColor: '#E7E6E1',
+    flexWrap: 'wrap',
+  },
+});
 
-const width= [40,80,80,80,80,80,200];
+const width = [20, 110, 50, 40, 60, 20, 60];
+
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 
 function IssueRow(props) {
     const issue = props.issue;
     {/****** Q2: Coding Starts here. Create a row of data in a variable******/}
+    // const rowData = [issue.id, issue.title, issue.owner, issue.status, issue.created?.toString(), issue.effort, issue.due?.toString()];
+    const rowData = [
+      <Text>{issue.id || "N/A"}</Text>,
+      <Text>{issue.title || "N/A"}</Text>,
+      <Text>{issue.owner || "N/A"}</Text>,
+      <Text>{issue.status || "N/A"}</Text>,
+      <Text>{formatDate(issue.created) || "N/A"}</Text>,
+      <Text>{issue.effort || "N/A"}</Text>,
+      <Text>{formatDate(issue.due) || "N/A"}</Text>
+    ];
     {/****** Q2: Coding Ends here.******/}
     return (
       <>
       {/****** Q2: Start Coding here. Add Logic to render a row  ******/}
-      
+      <Row data={rowData} widthArr={width} style={styles.row} textStyle={styles.text} />
       {/****** Q2: Coding Ends here. ******/}  
       </>
     );
@@ -89,14 +156,28 @@ function IssueRow(props) {
     );
 
     {/****** Q2: Start Coding here. Add Logic to initalize table header  ******/}
-
+    // const tableHeaders = ['ID', 'Title', 'Owner', 'Status', 'Created', 'Effort', 'Due'];
+    const tableHeaders = [
+      <Text>ID</Text>,
+      <Text>Title</Text>,
+      <Text>Owner</Text>,
+      <Text>Status</Text>,
+      <Text>Created</Text>,
+      <Text>Effort</Text>,
+      <Text>Due</Text>
+    ];
     {/****** Q2: Coding Ends here. ******/}
     
     
     return (
     <View style={styles.container}>
     {/****** Q2: Start Coding here to render the table header/rows.**********/}
-    
+      <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+        <Row data={tableHeaders} widthArr={width} style={styles.header} textStyle={styles.text} />
+        <ScrollView style={styles.dataWrapper}>
+          {issueRows}
+        </ScrollView>
+      </Table>
     {/****** Q2: Coding Ends here. ******/}
     </View>
     );
@@ -108,21 +189,77 @@ function IssueRow(props) {
       super();
       this.handleSubmit = this.handleSubmit.bind(this);
       /****** Q3: Start Coding here. Create State to hold inputs******/
+      this.state = { title: '', owner: '', effort: '', due: '' };
       /****** Q3: Code Ends here. ******/
     }
   
     /****** Q3: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
+    setTitle = (text) => {
+      this.setState({ title: text });
+    };
+  
+    setOwner = (text) => {
+      this.setState({ owner: text });
+    };
+  
+    setEffort = (text) => {
+      this.setState({ effort: text });
+    };
+  
+    setDueDate = (text) => {
+      this.setState({ due: text });
+    };
     /****** Q3: Code Ends here. ******/
     
     handleSubmit() {
       /****** Q3: Start Coding here. Create an issue from state variables and call createIssue. Also, clear input field in front-end******/
-      /****** Q3: Code Ends here. ******/
+      const newIssue = {
+        title: this.state.title,
+        owner: this.state.owner,
+        effort: parseInt(this.state.effort, 10) || 0, // 默认 effort 为 0
+        due: this.state.due,
+      };
+      this.props.createIssue(newIssue);
+      this.setState({
+        title: '',
+        owner: '',
+        effort: '',
+        due: '',
+      });
     }
+      /****** Q3: Code Ends here. ******/
   
     render() {
       return (
           <View>
           {/****** Q3: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+            <TextInput
+            placeholder="Title"
+            value={this.state.title}
+            onChangeText={this.setTitle}
+            style={{ borderWidth: 1, marginBottom: 8, padding: 5 }}
+            />
+            <TextInput
+              placeholder="Owner"
+              value={this.state.owner}
+              onChangeText={this.setOwner}
+              style={{ borderWidth: 1, marginBottom: 8, padding: 5 }}
+            />
+            <TextInput
+              placeholder="Effort"
+              value={this.state.effort}
+              onChangeText={this.setEffort}
+              keyboardType="numeric"
+              style={{ borderWidth: 1, marginBottom: 8, padding: 5 }}
+            />
+            <TextInput
+              placeholder="Due Date (YYYY-MM-DD)"
+              value={this.state.due}
+              onChangeText={this.setDueDate}
+              style={{ borderWidth: 1, marginBottom: 8, padding: 5 }}
+            />
+
+            <Button title="Add Issue" onPress={this.handleSubmit} />
           {/****** Q3: Code Ends here. ******/}
           </View>
       );
@@ -134,13 +271,38 @@ class BlackList extends React.Component {
     {   super();
         this.handleSubmit = this.handleSubmit.bind(this);
         /****** Q4: Start Coding here. Create State to hold inputs******/
+        this.state = { nameInput: '' };
         /****** Q4: Code Ends here. ******/
     }
     /****** Q4: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
+    setOwner = (text) => {
+    this.setState({ nameInput: text });
+    };
     /****** Q4: Code Ends here. ******/
-
+    
     async handleSubmit() {
     /****** Q4: Start Coding here. Create an issue from state variables and issue a query. Also, clear input field in front-end******/
+      const {nameInput} = this.state;
+      // console.log('GraphQL result:', result);
+
+      if (!nameInput.trim()) {
+        alert('Owner name cannot be empty.');
+        return;
+      }
+      const query = `mutation addToBlacklist($nameInput: String!) {
+        addToBlacklist(nameInput: $nameInput)
+      }`;
+    
+      try {
+        const result = await graphQLFetch(query, { nameInput });
+        // console.log('GraphQL result:', result);
+        alert('successfully added to blacklist'); 
+        this.setState({ nameInput: '' }); 
+        
+      } catch (error) {
+        alert(`Error adding owner to blacklist: ${error.message}`);
+      }
+      // this.setState({ nameInput: '' }); 
     /****** Q4: Code Ends here. ******/
     }
 
@@ -148,6 +310,19 @@ class BlackList extends React.Component {
     return (
         <View>
         {/****** Q4: Start Coding here. Create TextInput field, populate state variables. Create a submit button, and on submit, trigger handleSubmit.*******/}
+          <TextInput
+            placeholder="Enter Owner Name"
+            value={this.state.nameInput}
+            onChangeText={this.setOwner}
+            style={{
+              borderWidth: 1,
+              borderColor: '#ccc',
+              borderRadius: 4,
+              marginBottom: 10,
+              padding: 10,
+            }}
+          />
+          <Button title="Add to Blacklist" onPress={this.handleSubmit} />
         {/****** Q4: Code Ends here. ******/}
         </View>
     );
@@ -157,8 +332,9 @@ class BlackList extends React.Component {
 export default class IssueList extends React.Component {
     constructor() {
         super();
-        this.state = { issues: [] };
+        this.state = { issues: [], currentView : 'Q1', };
         this.createIssue = this.createIssue.bind(this);
+        this.setView = this.setView.bind(this);
     }
     
     componentDidMount() {
@@ -192,24 +368,48 @@ export default class IssueList extends React.Component {
     }
     }
     
+    setView(view) {
+      this.setState({ currentView : view });
+    }
     
     render() {
     return (
-    <>
-    {/****** Q1: Start Coding here. ******/}
-    {/****** Q1: Code ends here ******/}
+      <View style={styles.container}>
+        <View style={styles.navBar}>
+          <Button title="Issue Filter" onPress={() => this.setView('Q1')} />
+          <Button title="Issue Table" onPress={() => this.setView('Q2')} />
+          <Button title="Issue Add" onPress={() => this.setView('Q3')} />
+          <Button title="Blacklist" onPress={() => this.setView('Q4')} />
+        </View>
+
+        <View style={styles.content}>
+          {this.state.currentView === 'Q1' && <IssueFilter />}
+          {this.state.currentView === 'Q2' && <IssueTable issues={this.state.issues} />}
+          {this.state.currentView === 'Q3' && <IssueAdd createIssue={this.createIssue} />}
+          {this.state.currentView === 'Q4' && <BlackList />}
+        </View>
+      </View>
+
+    //后版本
+    // <>
+    // {/****** Q1: Start Coding here. ******/}
+    // <IssueFilter />
+    // {/****** Q1: Code ends here ******/}
 
 
-    {/****** Q2: Start Coding here. ******/}
-    {/****** Q2: Code ends here ******/}
+    // {/****** Q2: Start Coding here. ******/}
+    // <IssueTable issues={this.state.issues} />
+    // {/****** Q2: Code ends here ******/}
 
     
-    {/****** Q3: Start Coding here. ******/}
-    {/****** Q3: Code Ends here. ******/}
+    // {/****** Q3: Start Coding here. ******/}
+    // <IssueAdd createIssue={this.createIssue} />
+    // {/****** Q3: Code Ends here. ******/}
 
-    {/****** Q4: Start Coding here. ******/}
-    {/****** Q4: Code Ends here. ******/}
-    </>
+    // {/****** Q4: Start Coding here. ******/}
+    // <BlackList />
+    // {/****** Q4: Code Ends here. ******/}
+    // </>
       
     );
   }
